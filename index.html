@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños Sarai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9d5e5 0%, #e2a9be 50%, #d48ba0 100%);
+            color: #5a3d5c;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Decoraciones */
+        .hearts-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.3);
+            animation: float 5s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Encabezado */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            animation: fadeIn 2s;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: #9d4b7c;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #7c3b5f;
+            margin-bottom: 30px;
+        }
+        
+        /* Libro */
+        .book-container {
+            perspective: 1500px;
+            margin: 40px auto;
+            width: 90%;
+            max-width: 800px;
+            height: 500px;
+            position: relative;
+        }
+        
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.5s;
+        }
+        
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #9d4b7c, #c9739f);
+            border-radius: 10px 20px 20px 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+            transform-origin: left center;
+            transition: transform 1.5s;
+        }
+        
+        .book-cover h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .book-cover p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .open-book-btn {
+            background-color: #ffecf1;
+            color: #9d4b7c;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .open-book-btn:hover {
+            background-color: #f8d7e3;
+            transform: scale(1.05);
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff9fb;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .page h3 {
+            color: #9d4b7c;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #e2a9be;
+            padding-bottom: 10px;
+        }
+        
+        .page p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: #c9739f;
+            font-style: italic;
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            background-color: #9d4b7c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .page-btn:hover {
+            background-color: #7c3b5f;
+        }
+        
+        .page-btn:disabled {
+            background-color: #d4a5c0;
+            cursor: not-allowed;
+        }
+        
+        /* Galería secreta */
+        .secret-section {
+            margin: 60px auto;
+            max-width: 800px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+        }
+        
+        .secret-section.active {
+            display: block;
+            animation: fadeIn 1.5s;
+        }
+        
+        .code-input {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .code-input input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.8rem;
+            border: 2px solid #c9739f;
+            border-radius: 10px;
+            background-color: #fff9fb;
+            color: #7c3b5f;
+        }
+        
+        .secret-btn {
+            background-color: #c9739f;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .secret-btn:hover {
+            background-color: #9d4b7c;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .photo-frame {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .photo-frame:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .photo-frame p {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7c3b5f;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #7c3b5f;
+            border-top: 1px dashed #e2a9be;
+            margin-top: 40px;
+        }
+        
+        .heart-icon {
+            color: #e91e63;
+            animation: heartbeat 1.5s infinite;
+            margin: 0 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            5% { transform: scale(1.1); }
+            10% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            20% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .book-container {
+                height: 400px;
+            }
+            
+            .book-cover h2 {
+                font-size: 2rem;
+            }
+            
+            .page {
+                padding: 25px;
+            }
+            
+            .page h3 {
+                font-size: 1.6rem;
+            }
+            
+            .code-input input {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Corazones flotantes -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container">
+        <header>
+            <h1>¡Feliz Cumpleaños, Sarai!</h1>
+            <p class="subtitle">4 de Febrero - Un día para celebrar tu existencia</p>
+            <p><i class="fas fa-gift"></i> Toca el libro para descubrir un mensaje especial <i class="fas fa-gift"></i></p>
+        </header>
+        
+        <!-- Libro interactivo -->
+        <div class="book-container">
+            <div class="book" id="book">
+                <!-- Portada del libro -->
+                <div class="book-cover" id="bookCover">
+                    <h2>Mi Historia Contigo</h2>
+                    <p>Un libro especial para un día especial</p>
+                    <button class="open-book-btn" id="openBookBtn">Abrir Libro</button>
+                </div>
+                
+                <!-- Páginas del libro -->
+                <div class="page active" id="page1">
+                    <h3>Capítulo 1: El Primer Recuerdo</h3>
+                    <p>Recuerdo la primera vez que te vi como si fuera ayer. No sé exactamente qué tenía ese día, pero desde ese momento supe que había algo especial en ti. Tu sonrisa tenía la capacidad de iluminar incluso el día más gris, y tu energía contagiosa hacía que todos a tu alrededor se sintieran mejor.</p>
+                    <p>Hay personas que llegan a nuestra vida y dejan una huella imborrable, y tú eres una de ellas. Cada momento compartido, cada risa, cada conversación, se ha convertido en un tesoro que guardo con mucho cariño en mi corazón.</p>
+                    <p>En este día tan especial, quiero que sepas lo importante que eres para mí y para todas las personas que tienen la fortuna de conocerte. Eres una persona única, con una luz propia que ilumina todo a su paso.</p>
+                    <div class="page-number">Página 1</div>
+                    <div class="page-controls">
+                        <button class="page-btn" id="prevPageBtn" disabled>Anterior</button>
+                        <button class="page-btn" id="nextPageBtn">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page2">
+                    <h3>Capítulo 2: Tus Cualidades Únicas</h3>
+                    <p>Si tuviera que describirte con una sola palabra, sería "auténtica". Eres exactamente quien quieres ser, sin máscaras ni pretensiones. Y esa honestidad contigo misma y con los demás es algo que admiro profundamente.</p>
+                    <p>Tienes una capacidad increíble para hacer sentir especiales a las personas. Cuando hablas con alguien, le das toda tu atención, como si en ese momento fuera la persona más importante del mundo. Ese don no lo tiene cualquiera.</p>
+                    <p>Tu sentido del humor es otro de tus superpoderes. Sabes encontrar el lado divertido de las situaciones, incluso cuando no es fácil. Y tu risa... tu risa es contagiosa, genuina, una melodía que alegra el alma.</p>
+                    <div class="page-number">Página 2</div>
+                    <div class="page-controls">
+                        <button class="page-btn" id="prevPageBtn2">Anterior</button>
+                        <button class="page-btn" id="nextPageBtn2">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page3">
+                    <h3>Capítulo 3: Lo Que Admiro de Ti</h3>
+                    <p>Admiro tu valentía para enfrentar los desafíos de la vida. He visto cómo te levantas cada vez que la vida te pone a prueba, con una fortaleza que inspira. No te rindes fácilmente, y esa determinación es admirable.</p>
+                    <p>Admiro tu capacidad para soñar. Tienes metas, ilusiones, proyectos... y trabajas por ellos con constancia. Sabes hacia dónde quieres ir, y eso es algo muy valioso.</p>
+                    <p>Admiro tu corazón generoso. Siempre estás dispuesta a ayudar, a escuchar, a acompañar. Tu empatía es como un faro que guía a quienes te rodean cuando están en momentos oscuros.</p>
+                    <div class="page-number">Página 3</div>
+                    <div class="page-controls">
+                        <button class="page-btn" id="prevPageBtn3">Anterior</button>
+                        <button class="page-btn" id="nextPageBtn3">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page4">
+                    <h3>Capítulo 4: Nuestros Momentos</h3>
+                    <p>Cada recuerdo que tenemos juntos es como una pequeña joya que guardo con cuidado. Esas conversaciones interminables, esas salidas espontáneas, esos silencios cómodos que solo se dan entre personas que se entienden sin necesidad de palabras.</p>
+                    <p>Me encanta cómo podemos hablar de cualquier cosa, desde los temas más profundos hasta las tonterías más grandes. Contigo nunca hay aburrimiento, siempre hay algo nuevo que descubrir, algo interesante que compartir.</p>
+                    <p>Espero que este nuevo año de vida te traiga momentos tan especiales como los que tú nos das a los que te rodeamos. Que cada día esté lleno de razones para sonreír, de motivos para seguir soñando, de oportunidades para crecer.</p>
+                    <div class="page-number">Página 4</div>
+                    <div class="page-controls">
+                        <button class="page-btn" id="prevPageBtn4">Anterior</button>
+                        <button class="page-btn" id="nextPageBtn4">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page5">
+                    <h3>Capítulo 5: Mi Deseo Para Ti</h3>
+                    <p>En este día tan especial, mi mayor deseo para ti es que seas feliz. No solo hoy, sino todos los días de tu vida. Que encuentres razones para sonreír cada mañana al despertar, que tus sueños se hagan realidad, que tu corazón siempre esté lleno de amor.</p>
+                    <p>Que la vida te sorprenda con momentos maravillosos, que las dificultades que encuentres en el camino solo sirvan para hacerte más fuerte, que las personas que te rodeen valoren la persona increíble que eres.</p>
+                    <p>Y sobre todo, que nunca olvides lo especial que eres. Eres una persona única, irrepetible, con un corazón enorme y una luz que el mundo necesita. ¡Feliz cumpleaños, Sarai! Que este nuevo año de vida esté lleno de bendiciones.</p>
+                    <div class="page-number">Página 5</div>
+                    <div class="page-controls">
+                        <button class="page-btn" id="prevPageBtn5">Anterior</button>
+                        <button class="page-btn" id="nextPageBtn5">Cerrar Libro</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección secreta -->
+        <div class="secret-section" id="secretSection">
+            <h2><i class="fas fa-lock"></i> Galería Secreta de Sarai <i class="fas fa-lock"></i></h2>
+            <p>Para acceder a esta galería especial, ingresa el código secreto:</p>
+            <p><em>Pista: El código es 1234</em></p>
+            
+            <div class="code-input">
+                <input type="text" maxlength="1" id="code1">
+                <input type="text" maxlength="1" id="code2">
+                <input type="text" maxlength="1" id="code3">
+                <input type="text" maxlength="1" id="code4">
+            </div>
+            
+            <button class="secret-btn" id="checkCodeBtn">Ver Galería Secreta</button>
+            
+            <div id="galleryContent" style="display: none;">
+                <div class="gallery">
+                    <div class="photo-frame">
+                        <img src="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Momentos especiales">
+                        <p>Risas compartidas</p>
+                    </div>
+                    <div class="photo-frame">
+                        <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Celebración">
+                        <p>Celebrando la vida</p>
+                    </div>
+                    <div class="photo-frame">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Sonrisa radiante">
+                        <p>Tu sonrisa ilumina</p>
+                    </div>
+                    <div class="photo-frame">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Aventuras">
+                        <p>Aventuras por vivir</p>
+                    </div>
+                </div>
+                <p style="margin-top: 30px; font-size: 1.2rem;">
+                    <i class="fas fa-heart heart-icon"></i> Estas fotos representan los hermosos momentos que te esperan este nuevo año. ¡Que tengas un cumpleaños maravilloso! <i class="fas fa-heart heart-icon"></i>
+                </p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Hecho con <i class="fas fa-heart heart-icon"></i> para Sarai en su día especial</p>
+            <p>4 de Febrero - Un día para recordar siempre</p>
+        </footer>
+    </div>
+
+    <script>
+        // Crear corazones flotantes
+        const heartsContainer = document.getElementById('heartsContainer');
+        for (let i = 0; i < 50; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heartsContainer.appendChild(heart);
+        }
+        
+        // Funcionalidad del libro
+        const bookCover = document.getElementById('bookCover');
+        const openBookBtn = document.getElementById('openBookBtn');
+        const book = document.getElementById('book');
+        const pages = document.querySelectorAll('.page');
+        let currentPage = 1;
+        
+        // Abrir libro
+        openBookBtn.addEventListener('click', function() {
+            book.style.transform = 'rotateY(-30deg)';
+            bookCover.style.transform = 'rotateY(-160deg)';
+            document.getElementById('page1').classList.add('active');
+        });
+        
+        // Navegación entre páginas
+        document.getElementById('nextPageBtn').addEventListener('click', nextPage);
+        document.getElementById('nextPageBtn2').addEventListener('click', nextPage);
+        document.getElementById('nextPageBtn3').addEventListener('click', nextPage);
+        document.getElementById('nextPageBtn4').addEventListener('click', nextPage);
+        
+        document.getElementById('prevPageBtn2').addEventListener('click', prevPage);
+        document.getElementById('prevPageBtn3').addEventListener('click', prevPage);
+        document.getElementById('prevPageBtn4').addEventListener('click', prevPage);
+        document.getElementById('prevPageBtn5').addEventListener('click', prevPage);
+        
+        // Cerrar libro (desde última página)
+        document.getElementById('nextPageBtn5').addEventListener('click', function() {
+            book.style.transform = 'rotateY(0deg)';
+            bookCover.style.transform = 'rotateY(0deg)';
+            
+            // Ocultar todas las páginas
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Mostrar sección secreta después de cerrar el libro
+            setTimeout(() => {
+                document.getElementById('secretSection').classList.add('active');
+            }, 1000);
+        });
+        
+        function nextPage() {
+            if (currentPage < 5) {
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage++;
+                document.getElementById('page' + currentPage).classList.add('active');
+            }
+        }
+        
+        function prevPage() {
+            if (currentPage > 1) {
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage--;
+                document.getElementById('page' + currentPage).classList.add('active');
+            }
+        }
+        
+        // Funcionalidad de la galería secreta
+        const codeInputs = document.querySelectorAll('.code-input input');
+        const checkCodeBtn = document.getElementById('checkCodeBtn');
+        
+        // Auto-enfoque en inputs de código
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                if (this.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        // Verificar código
+        checkCodeBtn.addEventListener('click', function() {
+            const code = Array.from(codeInputs).map(input => input.value).join('');
+            
+            if (code === '1234') {
+                document.getElementById('galleryContent').style.display = 'block';
+                checkCodeBtn.textContent = '¡Código Correcto!';
+                checkCodeBtn.style.backgroundColor = '#4CAF50';
+                
+                // Mostrar confeti
+                showConfetti();
+            } else {
+                checkCodeBtn.textContent = 'Código Incorrecto, Intenta Nuevamente';
+                checkCodeBtn.style.backgroundColor = '#f44336';
+                
+                // Limpiar inputs
+                codeInputs.forEach(input => input.value = '');
+                codeInputs[0].focus();
+            }
+        });
+        
+        // Mostrar confeti
+        function showConfetti() {
+            const confettiCount = 150;
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerHTML = ['🎉', '🎊', '🥳', '🎂', '🎁', '❤', '✨'][Math.floor(Math.random() * 7)];
+                confetti.style.position = 'fixed';
+                confetti.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-50px';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                
+                container.appendChild(confetti);
+                
+                // Remover confeti después de la animación
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+            
+            // Agregar animación de caída
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    to {
+                        transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Efecto de escritura para el título
+        const title = document.querySelector('h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                title.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        // Iniciar efecto de escritura después de cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(typeWriter, 1000);
+        });
+    </script>
+</body>
+</html>
